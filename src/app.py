@@ -31,7 +31,7 @@ if __name__ == "__main__":
     )
 
     math_agent = MathAgent(
-        model_name="llama3.1:8b",
+        model_name="qwen3:8b",
         llm_mode="local_ollama"
     )
 
