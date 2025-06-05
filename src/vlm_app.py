@@ -10,6 +10,7 @@ from langchain_community.utilities import (
 )
 from src.agents.research_agent import ResearchAgent
 from src.utils.messages import Messages
+from src.chains.image_describer import ImageDescriber
 
 
 if __name__ == "__main__":
@@ -48,7 +49,14 @@ if __name__ == "__main__":
         instruction_prompt=research_prompt
     )
 
-    for chunk in research_agent.agent.stream(
-        {"messages": [{"role": "user", "content": "machine learning"}]}
-    ):
-        Messages.pretty_print_messages(chunk)
+    # for chunk in research_agent.agent.stream(
+    #     {"messages": [{"role": "user", "content": "machine learning"}]}
+    # ):
+    #     Messages.pretty_print_messages(chunk)
+
+    image_describer_agent = ImageDescriber(llm_mode='ollama')
+    results = image_describer_agent.chain.invoke({
+        "image_path_or_url": "https://github.githubassets.com/assets/GitHub-Mark-ea2971cee799.png"}
+    )
+
+    print(results)
