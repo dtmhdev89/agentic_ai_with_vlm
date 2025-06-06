@@ -1,7 +1,7 @@
 from typing import Literal, List
 from langgraph_supervisor import create_supervisor
 from langchain.chat_models import init_chat_model
-from langchain_ollama import ChatOllama
+import os
 
 
 class SupervisorAgent:
@@ -10,7 +10,7 @@ class SupervisorAgent:
     def __init__(
         self,
         model_name: str,
-        llm_mode: Literal['local_ollama']
+        llm_mode: Literal['ollama', 'openai']
     ):
         self._model_name = model_name
         self._llm_mode = llm_mode
@@ -21,14 +21,17 @@ class SupervisorAgent:
         """agent property"""
         return self._agent
     
-    def _init_llm_from_ollama_server(self):
-        llm = ChatOllama(
-            model=self._model_name,
-            base_url="http://127.0.0.1:11434",
-            streaming=True
-        )
-
-        return llm
+    def _config_for_init_chat_model(self):
+        base_configs = {
+            "model": self._model_name,
+            "model_provider": self._llm_mode
+        }
+        if self._llm_mode == 'ollama':
+            base_configs.update(
+                {"base_url": os.getenv("OLLAMA_URI")}
+            )
+        
+        return base_configs
 
     def build_agent_with_instruction(
         self,
@@ -37,10 +40,11 @@ class SupervisorAgent:
     ):
         """Build agent"""
 
+        configs = self._config_for_init_chat_model()
+        
         self._agent = create_supervisor(
             model=init_chat_model(
-                model=self._model_name,
-                model_provider='ollama'
+                **configs
             ),
             agents=subordinate_agents,
             prompt=instruction_prompt,
