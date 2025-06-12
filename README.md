@@ -1,2 +1,5 @@
 # Agentic AI with VLM
-[Tutorial] Agentic AI with VLM using LangGraph
+## Description:
+Use Supervisor Agent pattern
+
+![Diagram](data_outputs/supervisor_agent_graph.png)
