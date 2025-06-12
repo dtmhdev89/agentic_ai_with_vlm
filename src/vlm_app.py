@@ -133,6 +133,11 @@ if __name__ == "__main__":
         subordinate_agents=[research_agent.agent, vision_agent]
     )
 
+    # chart_bytes = supervisor_agent.get_graph().draw_mermaid_png()
+
+    # with open('data_outputs/vlm_supervisor_agent_graph.png', 'wb') as writer:
+    #     writer.write(chart_bytes)
+
     for chunk in supervisor_agent.stream(
         {
             "messages": [
